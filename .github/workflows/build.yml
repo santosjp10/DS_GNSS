@@ -1,0 +1,59 @@
+﻿# GeoSense GNSS
+
+App de coleta geoespacial. Compila APK via GitHub Actions.
+
+## Build automÃ¡tico
+
+Ao fazer push para a branch main, o GitHub Actions gera um APK de depuraÃ§Ã£o.
+
+## Desenvolvimento local
+
+\\\
+npm install
+npx cap add android
+npx cap sync
+npx cap open android
+\\\
+"@ | Out-File -Encoding utf8 -FilePath "README.md"
+
+# ----- build.yml -----
+@"
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Install dependencies
+        run: npm install
+      - name: Init Capacitor
+        run: npx cap init GeoSense GNSS com.seudominio.geosense --web-dir .
+      - name: Add Android
+        run: npx cap add android
+      - name: Sync
+        run: npx cap sync
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
