@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: Init Capacitor
-        run: npx cap init GeoSense GNSS com.seudominio.geosense --web-dir .
+        run: npx cap init "GeoSense GNSS" com.seudominio.geosense --web-dir .
 
       - name: Add Android
         run: npx cap add android
